@@ -1,33 +1,46 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import {addContact} from "../../Actions/contactActions";
+import {getContact, updateContact} from "../../Actions/contactActions";
 import {useHistory} from "react-router-dom";
 import shortid from "shortid";
+import {useParams} from "react-router-dom";
 
-const AddContact = () => {
+const EditContact = () => {
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
 
     const dispatch = useDispatch();
-    const history = useHistory();
+    const contact = useSelector(state => state.contacts.contact);
 
-    const createContact = (e) =>{
+    let history = useHistory();
+    let {id} = useParams();
+
+    
+    useEffect(() => {
+        if(contact != null){
+            setName(contact.name);
+            setPhone(contact.phone);
+            setEmail(contact.email);
+        }
+        dispatch(getContact(id))
+    }, [contact]);
+
+    const onUpdateContact = (e) =>{
         e.preventDefault();
-        const newContact = {
-            id: shortid.generate(),
+        const update_contact = Object.assign(contact, {
             name: name,
             phone: phone,
-            email: email
-        }
-        dispatch(addContact(newContact));
-        history.push("/");
-    }
+            email: email,
+        });
+        dispatch(updateContact(update_contact));
+        history.push("/")
+    };
     return (
         <div className="card border-0 shadow"> 
-            <div className="card-header">Add to Contact</div>
+            <div className="card-header">Edit the Contact</div>
             <div className="card-body">
-                <form onSubmit={(e)=> createContact(e)}>
+                <form onSubmit={(e)=> onUpdateContact(e)}>
                     <div className="form-group m-3">
                         <input 
                             type="text" 
@@ -56,11 +69,11 @@ const AddContact = () => {
                                                     
                         />
                     </div>
-                    <button className="btn btn-primary" style={{marginLeft:"16px"}} type="submit">Create Contact</button>
+                    <button className="btn btn-warning" style={{marginLeft:"16px"}} type="submit">Edit Contact</button>
                 </form>
             </div>
         </div>
     )
 }
 
-export default AddContact
+export default EditContact

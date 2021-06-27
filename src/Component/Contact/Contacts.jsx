@@ -1,12 +1,12 @@
 import React from 'react'
-import {useSelector, useDispatch} from "react-redux";
+import {useSelector} from "react-redux";
 import Contact from "./Contact";
 
 const Contacts = () => {
-    const contacts = useSelector(state => state.contacts)
+    const contacts = useSelector(state => state.contacts.contacts);
     return (
         <>
-            <table class="table shadow">
+            <table className="table shadow">
                 <thead>
                     <tr>
                     <th>
@@ -24,7 +24,7 @@ const Contacts = () => {
                 <tbody>
                     {
                         contacts.map( contact => (
-                            <Contact contact={contact} />
+                            <Contact contact={contact} key={contact.id} />
                         ))
                     }
 
