@@ -3,16 +3,26 @@ import Avatar from "react-avatar";
 import {Link} from "react-router-dom";
 import {deleteContact} from "../../Actions/contactActions";
 import { useSelector, useDispatch } from 'react-redux';
+import {motion} from "framer-motion";
 
-const Contact = ({contact}) => {
+const Contact = ({contact, selectAll}) => {
     const dispatch = useDispatch();
     const {name, phone, email, id} = contact;
 
     return (
-        <tr>
+        <motion.tr
+            initial={{x: "100vw", transition: {type:"spring", duration:2}}}
+            animate={{x: 0, transition: {type:"spring", duration:2}}}
+            transition={{type:"spring", duration:0.1}}
+
+            whileHover={{
+                scale: 1.009,
+                transition: {type: "spring", duration: 0.8},
+            }}
+        >
             <td>
                 <div className="custom-control custom-checkbox">
-                    <input type="checkbox" className="custom-control-input"/>
+                    <input checked={selectAll} type="checkbox" className="custom-control-input"/>
                     <label className="custom-control-label"></label>
                 </div>
             </td>
@@ -25,7 +35,7 @@ const Contact = ({contact}) => {
                 </Link>
                 <span onClick={()=> dispatch(deleteContact(id))}><i className="fas fa-trash text-danger"></i></span>
             </td>
-        </tr>
+        </motion.tr>
     )
 }
 
